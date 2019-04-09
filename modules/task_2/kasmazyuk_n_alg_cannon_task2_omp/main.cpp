@@ -56,36 +56,35 @@ void Canon(double *A, double *B, double* C, int n, int q) {
     }
 }
 
-void Canon_Omp(double* pAMatrix, double* pBMatrix, double *pCMatrix, int q, int Size)
-{
-	omp_set_num_threads(q);
-	int GridSize = int(sqrt((int)q));
-	int BlockSize = Size / GridSize;
-	#pragma omp parallel 
-	{
-		int ThreadID = omp_get_thread_num();
-		int RowIndex = ThreadID / GridSize;
-		int ColIndex = ThreadID%GridSize;
-		for (int iter = 0; iter<GridSize; iter++) {
-			for (int i = RowIndex*BlockSize; i<(RowIndex + 1)*BlockSize; i++)
-				for (int j = ColIndex*BlockSize; j<(ColIndex + 1)*BlockSize; j++)
-					for (int k = iter*BlockSize; k < (iter + 1)*BlockSize; k++) {
-						pCMatrix[i*Size + j] += pAMatrix[i*Size + k] * pBMatrix[k*Size + j];
-			}
-		}
-	}
+void Canon_Omp(double* pAMatrix, double* pBMatrix, double *pCMatrix, int q, int Size) {
+    omp_set_num_threads(q);
+    int GridSize = static_cast <int>(sqrt((int)q));
+    int BlockSize = Size / GridSize;
+    #pragma omp parallel
+    {
+        int ThreadID = omp_get_thread_num();
+        int RowIndex = ThreadID / GridSize;
+        int ColIndex = ThreadID%GridSize;
+        for (int iter = 0; iter < GridSize; iter++) {
+            for (int i = RowIndex*BlockSize; i < (RowIndex + 1)*BlockSize; i++)
+                for (int j = ColIndex*BlockSize; j < (ColIndex + 1)*BlockSize; j++)
+                    for (int k = iter*BlockSize; k < (iter + 1)*BlockSize; k++) {
+                        pCMatrix[i*Size + j] += pAMatrix[i*Size + k] * pBMatrix[k*Size + j];
+            }
+        }
+    }
 }
 
 int main(int argc, char** argv) {
-	std::cout << "Chislo potokov (q) - polniy kvadrat!" << std::endl;
+    std::cout << "Chislo potokov (q) - polniy kvadrat!" << std::endl;
     int size = 1000;
-	int q = 25;
-	int proverka = 0;
+    int q = 25;
+    int proverka = 0;
     double *A, *B, *C, *S, *C1;
-	double time_par = 0;
+    double time_par = 0;
     double time_pos = 0;
-	double time_izi = 0;
-	std::cout << "omp_get_max_threads() = " << omp_get_max_threads() << std::endl;
+    double time_izi = 0;
+    std::cout << "omp_get_max_threads() = " << omp_get_max_threads() << std::endl;
     if (argc > 2) {
     size = atoi(argv[1]);
     q = atoi(argv[2]);
@@ -93,12 +92,12 @@ int main(int argc, char** argv) {
     A = CreateMatrix(size);
     B = CreateMatrix(size);
     C = CreateMatrix(size);
-	S = CreateMatrix(size);
-	C1 = CreateMatrix(size);
+    S = CreateMatrix(size);
+    C1 = CreateMatrix(size);
 
     ClearMatrix(C, size);
-	ClearMatrix(S, size);
-	ClearMatrix(C1, size);
+    ClearMatrix(S, size);
+    ClearMatrix(C1, size);
 
     RandMatrix(A, B, size);
 
@@ -107,46 +106,41 @@ int main(int argc, char** argv) {
     PrintMatrix(B, size);
     }
 
-	time_izi = omp_get_wtime();
+    time_izi = omp_get_wtime();
     MultMatrix(A, B, C1, size, size);
-	time_izi = omp_get_wtime() - time_izi;
+    time_izi = omp_get_wtime() - time_izi;
 
-	time_pos = omp_get_wtime();
+    time_pos = omp_get_wtime();
     Canon(A, B, C, size, q);
-	time_pos = omp_get_wtime() - time_pos;
+    time_pos = omp_get_wtime() - time_pos;
 
-	time_par = omp_get_wtime();
-	Canon_Omp(A, B, S, q, size);
-	time_par = omp_get_wtime() - time_par;
+    time_par = omp_get_wtime();
+    Canon_Omp(A, B, S, q, size);
+    time_par = omp_get_wtime() - time_par;
 
 
     if (size < 10) {
-	PrintMatrix(C1, size);
+    PrintMatrix(C1, size);
     PrintMatrix(C, size);
-	PrintMatrix(S, size);
-	}
+    PrintMatrix(S, size);
+    }
 
-
-	for (int i = 0; i < size; i++) 
+    for (int i = 0; i < size; i++) 
         for (int j = 0; j < size; j++) {
             if (fabs(S[i * size + j] - C1[i * size + j]) < 1)
-				proverka++;
-			else
-				proverka = 0;
-		}
-	
+                proverka++;
+            else
+                proverka = 0;
+        }
 
-	std::cout << "Time izi version is " << time_izi << std::endl;
-	std::cout << "Time posl version is " << time_pos << std::endl;
-	std::cout << "Time parallel version is " << time_par << std::endl;
-	std::cout << "Boost is " << time_izi / time_par << std::endl;
-	if (proverka == 0) 
-		std::cout << "DANGER: Result not right" << std::endl;
-	else
-		std::cout << "Bingo! Result right!" << std::endl;
-
-
-	system ("PAUSE");
+    std::cout << "Time izi version is " << time_izi << std::endl;
+    std::cout << "Time posl version is " << time_pos << std::endl;
+    std::cout << "Time parallel version is " << time_par << std::endl;
+    std::cout << "Boost is " << time_izi / time_par << std::endl;
+    if (proverka == 0)
+        std::cout << "DANGER: Result not right" << std::endl;
+    else
+        std::cout << "Bingo! Result right!" << std::endl;
 
     return 0;
 }
