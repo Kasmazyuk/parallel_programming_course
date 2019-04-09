@@ -58,7 +58,7 @@ void Canon(double *A, double *B, double* C, int n, int q) {
 
 void Canon_Omp(double* pAMatrix, double* pBMatrix, double *pCMatrix, int q, int Size) {
     omp_set_num_threads(q);
-    int GridSize = static_cast <int>(sqrt((int)q));
+    int GridSize = static_cast <int>(sqrt(q));
     int BlockSize = Size / GridSize;
     #pragma omp parallel
     {
@@ -77,8 +77,8 @@ void Canon_Omp(double* pAMatrix, double* pBMatrix, double *pCMatrix, int q, int 
 
 int main(int argc, char** argv) {
     std::cout << "Chislo potokov (q) - polniy kvadrat!" << std::endl;
-    int size = 1000;
-    int q = 25;
+    int size = 4;
+    int q = 2;
     int proverka = 0;
     double *A, *B, *C, *S, *C1;
     double time_par = 0;
@@ -125,7 +125,7 @@ int main(int argc, char** argv) {
     PrintMatrix(S, size);
     }
 
-    for (int i = 0; i < size; i++) 
+    for (int i = 0; i < size; i++)
         for (int j = 0; j < size; j++) {
             if (fabs(S[i * size + j] - C1[i * size + j]) < 1)
                 proverka++;
