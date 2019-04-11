@@ -152,5 +152,7 @@ int main(int argc, char** argv) {
         std::cout << "DANGER: Result not right" << std::endl;
     else
         std::cout << "Bingo! Result right!" << std::endl;
+
     return 0;
+
 }
