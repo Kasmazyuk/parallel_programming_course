@@ -34,6 +34,10 @@ void ClearMatrix(double *C, int N) {
     for (int i = 0; i < N*N; ++i) {
             C[i] = 0;
     }
+	for (int i = 0; i < N*N; i += N) {
+        for (int j = 0; j< N; j++)
+            C[i + j] = 0;
+	}
 }
 
 void MultMatrix(double* A, double* B, double* C, int blockSize, int N) {
@@ -109,7 +113,12 @@ int main(int argc, char** argv) {
     }
 
     time_izi = omp_get_wtime();
-    MultMatrix(A, B, C1, size, size);
+    for (int i = 0; i < size; ++i)
+        for (int j = 0; j < size; ++j)
+            for (int k = 0; k < size; ++k)
+            {
+               SS[i*size+j] += A[i*size+k] * B[k*size+j];
+            }
     time_izi = omp_get_wtime() - time_izi;
 
     time_pos = omp_get_wtime();
@@ -121,15 +130,15 @@ int main(int argc, char** argv) {
     time_par = omp_get_wtime() - time_par;
 
 
-    if (size < 10) {
-    PrintMatrix(C1, size);
+    if (size < 5) {
+    PrintMatrix(SS, size);
     PrintMatrix(C, size);
     PrintMatrix(S, size);
     }
 
     for (int i = 0; i < size; i++)
         for (int j = 0; j < size; j++) {
-            if (fabs(S[i * size + j] - C1[i * size + j]) < 1)
+            if (fabs(S[i * size + j] - C[i * size + j]) < 0.1)
                 proverka++;
             else
                 proverka = 0;
@@ -143,6 +152,5 @@ int main(int argc, char** argv) {
         std::cout << "DANGER: Result not right" << std::endl;
     else
         std::cout << "Bingo! Result right!" << std::endl;
-
     return 0;
 }
