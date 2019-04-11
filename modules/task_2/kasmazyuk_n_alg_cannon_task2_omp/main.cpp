@@ -111,8 +111,7 @@ int main(int argc, char** argv) {
     time_izi = omp_get_wtime();
     for (int i = 0; i < size; ++i)
         for (int j = 0; j < size; ++j)
-            for (int k = 0; k < size; ++k)
-            {
+            for (int k = 0; k < size; ++k) {
                SS[i * size + j] += A[i * size + k] * B[k * size + j];
             }
     time_izi = omp_get_wtime() - time_izi;
@@ -150,5 +149,4 @@ int main(int argc, char** argv) {
         std::cout << "Bingo! Result right!" << std::endl;
 
     return 0;
-
 }
