@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     int size = 4;
     int q = 2;
     int proverka = 0;
-    double *A, *B, *C, *S, *C1;
+    double *A, *B, *C, *SS, *S, *C1;
     double time_par = 0;
     double time_pos = 0;
     double time_izi = 0;
@@ -90,12 +90,14 @@ int main(int argc, char** argv) {
     q = atoi(argv[2]);
     }
     A = CreateMatrix(size);
+    SS = CreateMatrix(size);
     B = CreateMatrix(size);
     C = CreateMatrix(size);
     S = CreateMatrix(size);
     C1 = CreateMatrix(size);
 
     ClearMatrix(C, size);
+    ClearMatrix(SS, size);
     ClearMatrix(S, size);
     ClearMatrix(C1, size);
 
@@ -141,6 +143,6 @@ int main(int argc, char** argv) {
         std::cout << "DANGER: Result not right" << std::endl;
     else
         std::cout << "Bingo! Result right!" << std::endl;
-
     return 0;
+
 }
