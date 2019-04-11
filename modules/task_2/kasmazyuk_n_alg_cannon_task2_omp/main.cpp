@@ -34,10 +34,6 @@ void ClearMatrix(double *C, int N) {
     for (int i = 0; i < N*N; ++i) {
             C[i] = 0;
     }
-    for (int i = 0; i < N*N; i += N) {
-        for (int j = 0; j< N; j++)
-            C[i + j] = 0;
-    }
 }
 
 void MultMatrix(double* A, double* B, double* C, int blockSize, int N) {
@@ -117,7 +113,7 @@ int main(int argc, char** argv) {
         for (int j = 0; j < size; ++j)
             for (int k = 0; k < size; ++k)
             {
-               SS[i*size+j] += A[i*size+k] * B[k*size+j];
+               SS[i * size + j] += A[i * size + k] * B[k * size + j];
             }
     time_izi = omp_get_wtime() - time_izi;
 
