@@ -34,10 +34,10 @@ void ClearMatrix(double *C, int N) {
     for (int i = 0; i < N*N; ++i) {
             C[i] = 0;
     }
-	for (int i = 0; i < N*N; i += N) {
+    for (int i = 0; i < N*N; i += N) {
         for (int j = 0; j< N; j++)
             C[i + j] = 0;
-	}
+    }
 }
 
 void MultMatrix(double* A, double* B, double* C, int blockSize, int N) {
