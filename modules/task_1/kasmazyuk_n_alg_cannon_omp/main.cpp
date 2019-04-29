@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
                 prov = 0;
     }
 
-    if (prov == 0) 
+    if (prov == 0)
         std::cout << "All very well!" << std::endl;
     else
         std::cout << "Oooops :( Error" << std::endl;
