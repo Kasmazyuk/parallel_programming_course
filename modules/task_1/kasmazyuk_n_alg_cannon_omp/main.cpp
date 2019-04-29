@@ -55,6 +55,7 @@ void Canon(double *A, double *B, double* C, int n, int q) {
     }
 }
 
+
 int main(int argc, char** argv) {
     int size = 625;
     int q = 25;
