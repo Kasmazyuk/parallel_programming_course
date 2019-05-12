@@ -46,12 +46,31 @@ void MultMatrix(double* pAMatrix, double* pBMatrix, double* pCMatrix, int blockS
             }
 }
 
+//void Canon_Omp(double* pAMatrix, double* pBMatrix, double *pCMatrix, int q, int Size) {
+//    omp_set_num_threads(q);
+//    int GridSize = static_cast <int>(sqrt(q));
+//    int BlockSize = Size / GridSize;
+//    #pragma omp parallel
+//    {
+//        int ThreadID = omp_get_thread_num();
+//        int RowIndex = ThreadID / GridSize;
+//        int ColIndex = ThreadID%GridSize;
+//        for (int iter = 0; iter < GridSize; iter++) {
+//            for (int i = RowIndex*BlockSize; i < (RowIndex + 1)*BlockSize; i++)
+//                for (int j = ColIndex*BlockSize; j < (ColIndex + 1)*BlockSize; j++)
+//                    for (int k = iter*BlockSize; k < (iter + 1)*BlockSize; k++) {
+//                        pCMatrix[i*Size + j] += pAMatrix[i*Size + k] * pBMatrix[k*Size + j];
+//            }
+//        }
+//    }
+//}
+
 void Canon(double *pAMatrix, double *pBMatrix, double *pCMatrix, int n, int q) {
     int blockSize = n / q;
     for (int i = 0; i < q; ++i) {
         for (int j = 0; j < q; ++j) {
             for (int k = 0; k < q; ++k) {
-                MultMatrix(&pAMatrix[(i*n + (j+i+k)%q)*blockSize], 
+                MultMatrix(&pAMatrix[(i*n + (j+i+k)%q)*blockSize],
                     &pBMatrix[(((i+j+k)%q)*n + j)*blockSize],
                     &pCMatrix[(i*n + j)*blockSize], blockSize, n);
             }
@@ -69,10 +88,10 @@ class TBB {
     int ThreadNum_;
  public:
     TBB(int ThreadNum, double *pAMatrix, double *pBMatrix, double *pCMatrix, int RowIndex, int
-    ColIndex, int Size) : ThreadNum_(ThreadNum),pAMatrix_(pAMatrix), pBMatrix_(pBMatrix),
+    ColIndex, int Size) : ThreadNum_(ThreadNum), pAMatrix_(pAMatrix), pBMatrix_(pBMatrix),
     pCMatrix_(pCMatrix), RowIndex_(RowIndex), ColIndex_(ColIndex), Size_(Size) {}
     void operator()() const {
-        int GridSize = int(sqrt((int)ThreadNum_));
+        int GridSize = static_cast<int>(sqrt(static_cast<int>(ThreadNum_)));
         int BlockSize = Size_ / GridSize;
         for (int iter = 0; iter < GridSize; iter++) {
             for (int i = RowIndex_*BlockSize; i < (RowIndex_ + 1)*BlockSize; i++)
@@ -119,8 +138,7 @@ int main(int argc, char** argv) {
     tbb::tick_count time = tbb::tick_count::now();
     for (int i = 0; i < size; ++i)
         for (int j = 0; j < size; ++j)
-            for (int k = 0; k < size; ++k)
-            {
+            for (int k = 0; k < size; ++k) {
                SS[i * size + j] += A[i * size + k] * B[k * size + j];
             }
     double time_izi = (tbb::tick_count::now() - time).seconds();
@@ -132,8 +150,8 @@ int main(int argc, char** argv) {
     tbb::task_scheduler_init init(q);
     time = tbb::tick_count::now();
     tbb::task_group tg;
-    for (int k = 0; k < sqrt((int)q); k++)
-    for (int j = 0; j < sqrt((int)q); j++)
+    for (int k = 0; k < sqrt(static_cast<int>(q)); k++)
+    for (int j = 0; j < sqrt(static_cast<int>(q)); j++)
     tg.run(TBB(q, A, B, C3, k, j, size));
     tg.wait();
     double time_TBB = (tbb::tick_count::now() - time).seconds();
