@@ -46,7 +46,7 @@ void MultMatrix(double* pAMatrix, double* pBMatrix, double* pCMatrix, int blockS
             }
 }
 
-//void Canon_Omp(double* pAMatrix, double* pBMatrix, double *pCMatrix, int q, int Size) {
+// void Canon_Omp(double* pAMatrix, double* pBMatrix, double *pCMatrix, int q, int Size) {
 //    omp_set_num_threads(q);
 //    int GridSize = static_cast <int>(sqrt(q));
 //    int BlockSize = Size / GridSize;
