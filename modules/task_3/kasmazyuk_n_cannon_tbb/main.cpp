@@ -79,13 +79,13 @@ void Canon(double *pAMatrix, double *pBMatrix, double *pCMatrix, int n, int q) {
 }
 
 class TBB {
+    int ThreadNum_;
+    double *pAMatrix_;
+    double *pBMatrix_;
+    double *pCMatrix_;
     int RowIndex_;
     int ColIndex_;
     int Size_;
-    double *pAMatrix_;
-    double *pCMatrix_;
-    double *pBMatrix_;
-    int ThreadNum_;
  public:
     TBB(int ThreadNum, double *pAMatrix, double *pBMatrix, double *pCMatrix, int RowIndex, int
     ColIndex, int Size) : ThreadNum_(ThreadNum), pAMatrix_(pAMatrix), pBMatrix_(pBMatrix),
