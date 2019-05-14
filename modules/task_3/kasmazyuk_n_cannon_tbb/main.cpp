@@ -180,5 +180,13 @@ int main(int argc, char** argv) {
     else
         std::cout << "Bingo! Result right!" << std::endl;
 
+    delete[] A;
+    delete[] B;
+    delete[] C;
+    delete[] S;
+    delete[] SS;
+    delete[] C3;
+    delete[] C1;
+
     return 0;
 }
